@@ -1,4 +1,5 @@
 const Discord = require("discord.js");
+const internetradio = require('node-internet-radio');
 
 module.exports.run = async (bot, message, args, prefix) => {
     var channel = "undefined";
