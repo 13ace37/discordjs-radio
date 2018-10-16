@@ -34,15 +34,7 @@ bot.on('message', message => {
     if (message.author.bot) return;
     if (message.channel.type === "dm") return message.channel.send("I don't anwser in this chat!");
 
-    let prefixes = JSON.parse(fs.readFileSync("./config/prefixes.json", "utf8"));
-
-    if (!prefixes[message.guild.id]) {
-        prefixes[message.guild.id] = {
-            prefixes: config.prefix
-        };
-    }
-
-    let prefix = prefixes[message.guild.id].prefixes;
+    let prefix = config.prefix;
 
     let botid = bot.user.id;
 
