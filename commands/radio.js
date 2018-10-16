@@ -1,5 +1,6 @@
 const Discord = require("discord.js");
 const internetradio = require('node-internet-radio');
+require('events').EventEmitter.prototype._maxListeners = 100;
 
 module.exports.run = async (bot, message, args, prefix) => {
     if (!args[0]) {
@@ -93,7 +94,7 @@ module.exports.run = async (bot, message, args, prefix) => {
     }
     return message.channel.send('Usage : `.radio play {radio number / help}/stop/info`');
 
-    
+
     function startStream(url, message) {
         if (!url) return;
         if (!message) return;
