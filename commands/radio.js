@@ -3,6 +3,7 @@ const internetradio = require('node-internet-radio');
 require('events').EventEmitter.prototype._maxListeners = 100;
 
 module.exports.run = async (bot, message, args, prefix) => {
+    message.delete(10);
     if (!args[0]) {
         return message.channel.send('Usage : `.radio play {radio number / help}/stop/info`');
     }
@@ -85,6 +86,7 @@ module.exports.run = async (bot, message, args, prefix) => {
         return;
     }
     if (args[0].toLowerCase() == "stop") {
+        
         try {
             return message.member.voiceChannel.leave();
         } catch (err) {
@@ -121,7 +123,7 @@ module.exports.run = async (bot, message, args, prefix) => {
                 `);
                         return message.channel.send(embed);
                     });
-                    message.delete(10);
+                    
                     dispatcher.on("end", end => {
                         message.member.voiceChannel.leave();
                     });
