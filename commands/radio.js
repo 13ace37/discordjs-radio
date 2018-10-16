@@ -2,25 +2,117 @@ const Discord = require("discord.js");
 const internetradio = require('node-internet-radio');
 
 module.exports.run = async (bot, message, args, prefix) => {
-    var channel = "undefined";
     if (!args[0]) {
-        return message.channel.send('Usage : `.radio play/stop/info`');
-    };
+        return message.channel.send('Usage : `.radio play {radio number / help}/stop/info`');
+    }
     if (args[0].toLowerCase() == "play") {
+        if (!args[1]) return message.channel.send('Usage : `.radio play {radio number / help}`');
+        if (args[1] == 'help') {
+            let embed = new Discord.RichEmbed()
+                .setAuthor(`🎵 **Radio-List** 🎵`)
+                .setColor('#fffff')
+                .addField('1', 'I♥ Radio', true)
+                .addField('2', 'I♥Top 100 Charts', true)
+                .addField('3', 'I♥2 Dance', true)
+                .addField('4', 'I♥ The Battle', true)
+                .addField('5', 'I♥ Dreist', true)
+                .addField('6', 'I♥ HipHop Turnup', true)
+                .addField('7', 'I♥ Radio&Chill', true)
+                .addField('8', 'I♥ Popstars', true)
+                .addField('9', 'I♥ The Sun', true)
+                .addField('10', 'I♥ Greatest Hits', true)
+                .addField('11', 'I♥ Hits History', true)
+                .addField('12', 'I♥ Party Hard', true)
+                .addField('13', 'I♥ Mashup', true)
+                .addField('14', 'I♥ Harder Music', true)
+                .addField('15', 'I♥ The DJ', true)
+                .addField('16', 'I♥ About:Berlin', true);
+            return message.channel.send(embed);
+        }
+        switch (args[1]) {
+            case '1':
+                startStream('http://stream01.iloveradio.de/iloveradio1.mp3', message);
+                break;
+            case '2':
+                startStream('http://stream01.iloveradio.de/iloveradio9.mp3', message);
+                break;
+            case '3':
+                startStream('http://stream01.iloveradio.de/iloveradio2.mp3', message);
+                break;
+            case '4':
+                startStream('http://stream01.iloveradio.de/iloveradio3.mp3', message);
+                break;
+            case '5':
+                startStream('http://stream01.iloveradio.de/iloveradio6.mp3', message);
+                break;
+            case '6':
+                startStream('http://stream01.iloveradio.de/iloveradio13.mp3', message);
+                break;
+            case '7':
+                startStream('http://stream01.iloveradio.de/iloveradio10.mp3', message);
+                break;
+            case '8':
+                startStream('http://stream01.iloveradio.de/iloveradio11.mp3', message);
+                break;
+            case '9':
+                startStream('http://stream01.iloveradio.de/iloveradio15.mp3', message);
+                break;
+            case '10':
+                startStream('http://stream01.iloveradio.de/iloveradio16.mp3', message);
+                break;
+            case '11':
+                startStream('http://stream01.iloveradio.de/iloveradio12.mp3', message);
+                break;
+            case '12':
+                startStream('http://stream01.iloveradio.de/iloveradio14.mp3', message);
+                break;
+            case '13':
+                startStream('http://stream01.iloveradio.de/iloveradio5.mp3', message);
+                break;
+            case '14':
+                startStream('http://stream01.iloveradio.de/iloveradio17.mp3', message);
+                break;
+            case '15':
+                startStream('http://stream01.iloveradio.de/iloveradio4.mp3', message);
+                break;
+            case '16':
+                startStream('http://stream01.iloveradio.de/iloveradio7.mp3', message);
+                break;
+            default:
+                return message.channel.send('Usage : `.radio play {radio number / help}`');
+        }
+        return;
+    }
+    if (args[0].toLowerCase() == "stop") {
+        try {
+            return message.member.voiceChannel.leave();
+        } catch (err) {
+            return message.channel.send("Oops!");
+        }
+
+    }
+    return message.channel.send('Usage : `.radio play {radio number / help}/stop/info`');
+
+    
+    function startStream(url, message) {
+        if (!url) return;
+        if (!message) return;
+        if (message.guild.voiceConnection != 'null') {
+            message.member.voiceChannel.leave();
+        }
         if (message.member.voiceChannel) {
             message.member.voiceChannel.join()
                 .then(connection => {
-                    channel = message.member.voiceChannel;
-                    const dispatcher = connection.playStream('http://streams.bigfm.de/nitroxedmilr-128-mp3'); //http://stream01.iloveradio.de/iloveradio1.mp3
-                    let stream = "http://streams.bigfm.de/nitroxedmilr-128-mp3";
-                    internetradio.getStationInfo(stream, function (error, station) {
+                    const dispatcher = connection.playStream(url);
+                    internetradio.getStationInfo(url, function (error, station) {
                         let radio = station.headers["icy-name"];
+                        if (radio == 'backup') radio = 'I Love Radio - Charts & Hits by iloveradio.de';
                         let title = station.title;
                         let track = title.split("-");
                         let trackName = track[1];
                         let trackAuthor = track[0];
                         let embed = new Discord.RichEmbed()
-                            .setAuthor(`🎵 Now playing : **${radio}** 🎵`)
+                            .setAuthor(`🎵 Now playing : ${radio} 🎵`)
                             .setColor('FF0000')
                             .setDescription(`
                 \`🎵\` **Song name :**  \`${trackName}\`
@@ -37,39 +129,6 @@ module.exports.run = async (bot, message, args, prefix) => {
         } else {
             message.reply('You need to join a voice channel first!');
         }
-    }
-    if (args[0].toLowerCase() == "stop") {
-        try {
-            return message.member.voiceChannel.leave();
-        } catch (err) {
-            message.channel.send("Oops!");
-        }
-
-    }
-    if (args[0].toLowerCase() == "info") {
-        let stream = "http://streams.bigfm.de/nitroxedmilr-128-mp3";
-        internetradio.getStationInfo(stream, function (error, station) {
-            let radio = station.headers["icy-name"];
-            let title = station.title;
-            let track = title.split("-");
-            let trackName = track[1];
-            let trackAuthor = track[0];
-            if (channel != "undefined") {
-                let embed = new Discord.RichEmbed()
-                    .setAuthor(`❌ **Not Playing** ❌`)
-                    .setColor('FF0000');
-                return message.channel.send(embed);
-            }
-
-            let embed = new Discord.RichEmbed()
-                .setAuthor(`🎵 **${radio}** 🎵`)
-                .setColor('FF0000')
-                .setDescription(`
-                \`🎵\` **Song name :**  \`${trackName}\`
-                \`🎤\` **Author(s) :**  \`${trackAuthor}\`
-                `);
-            return message.channel.send(embed);
-        });
     }
 
 };
