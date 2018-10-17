@@ -115,7 +115,7 @@ module.exports.run = async (bot, message, args, prefix) => {
                     const dispatcher = connection.playStream(url);
                     internetradio.getStationInfo(url, function (error, station) {
                         let radio = station.headers["icy-name"];
-                        if (radio == 'backup') radio = 'I Love Radio - Charts & Hits by iloveradio.de';
+                        if (!radio.startsWith('I')) radio = 'I Love Radio - Charts & Hits by iloveradio.de';
                         let title = station.title;
                         let track = title.split("-");
                         let trackName = track[1];
