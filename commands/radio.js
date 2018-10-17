@@ -88,9 +88,10 @@ module.exports.run = async (bot, message, args, prefix) => {
     if (args[0].toLowerCase() == "stop") {
         
         try {
-            return message.member.voiceChannel.leave();
+            return message.guild.voiceConnection.channel.leave();
         } catch (err) {
-            return message.channel.send("Oops!");
+            console.log(err);
+            return message.channel.send('Something went wrong!');
         }
 
     }
@@ -101,6 +102,7 @@ module.exports.run = async (bot, message, args, prefix) => {
         if (!url) return;
         if (!message) return;
         if (message.guild.voiceConnection != 'null') {
+            //console.log(message.guild.voiceConnection)
             message.member.voiceChannel.leave();
         }
         if (message.member.voiceChannel) {
@@ -125,7 +127,7 @@ module.exports.run = async (bot, message, args, prefix) => {
                     });
                     
                     dispatcher.on("end", end => {
-                        message.member.voiceChannel.leave();
+                        return message.guild.voiceConnection.channel.leave();
                     });
                 })
                 .catch(console.log);
