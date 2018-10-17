@@ -86,12 +86,16 @@ module.exports.run = async (bot, message, args, prefix) => {
         return;
     }
     if (args[0].toLowerCase() == "stop") {
-        
+
         try {
             return message.guild.voiceConnection.channel.leave();
         } catch (err) {
-            console.log(err);
-            return message.channel.send('Something went wrong!');
+            console.log(message.guild.voiceConnection);
+            if (message.guild.voiceConnection == null) {
+                return message.channel.send('How should it be possible to leave a channel where I\'m not in?');
+            } else {
+                return message.channel.send('Something went wrong!');
+            }
         }
 
     }
@@ -125,7 +129,7 @@ module.exports.run = async (bot, message, args, prefix) => {
                 `);
                         return message.channel.send(embed);
                     });
-                    
+
                     dispatcher.on("end", end => {
                         return message.guild.voiceConnection.channel.leave();
                     });
