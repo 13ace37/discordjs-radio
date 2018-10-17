@@ -133,7 +133,7 @@ module.exports.run = async (bot, message, args, prefix) => {
                                     trackName = track[1];
                                     trackAuthor = track[0];
                                     let newembed = new Discord.RichEmbed()
-                                        .setAuthor(`🎵 ${radio} 🎵`)
+                                        .setAuthor(`🎵 Song Changed : ${radio} 🎵`)
                                         .setColor('FF0000')
                                         .setDescription(`
                                     \`🎵\` **Song name :**  \`${trackName}\`
