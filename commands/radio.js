@@ -1,5 +1,8 @@
 const Discord = require("discord.js");
 const internetradio = require('node-internet-radio');
+
+var playingurl;
+
 require('events').EventEmitter.prototype._maxListeners = 100;
 
 module.exports.run = async (bot, message, args, prefix) => {
@@ -108,6 +111,7 @@ module.exports.run = async (bot, message, args, prefix) => {
         if (message.guild.voiceConnection != 'null') {
             //console.log(message.guild.voiceConnection)
             message.member.voiceChannel.leave();
+            playingurl = url;
             try {
                 clearInterval(streamInfo);
             } catch (e){}
@@ -126,6 +130,7 @@ module.exports.run = async (bot, message, args, prefix) => {
                         let trackAuthor = track[0];
 
                         function streamInfo() {
+                            if (url != playingurl) return;
                             internetradio.getStationInfo(url, function (error, station) {
                                 let newtitle = station.title;
                                 let newtrack = title.split("-");
