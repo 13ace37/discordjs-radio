@@ -88,9 +88,9 @@ module.exports.run = async (bot, message, args, prefix) => {
     if (args[0].toLowerCase() == "stop") {
 
         try {
+            clearInterval(streamInfo);
             return message.guild.voiceConnection.channel.leave();
         } catch (err) {
-            console.log(message.guild.voiceConnection);
             if (message.guild.voiceConnection == null) {
                 return message.channel.send('How should it be possible to leave a channel where I\'m not in?');
             } else {
@@ -120,6 +120,30 @@ module.exports.run = async (bot, message, args, prefix) => {
                         let track = title.split("-");
                         let trackName = track[1];
                         let trackAuthor = track[0];
+
+                        function streamInfo() {
+                            internetradio.getStationInfo(url, function (error, station) {
+                                let newtitle = station.title;
+                                let newtrack = title.split("-");
+                                let newtrackName = track[1];
+                                let newtrackAuthor = track[0];
+                                while (newtitle != title) {
+                                    title = station.title;
+                                    track = title.split("-");
+                                    trackName = track[1];
+                                    trackAuthor = track[0];
+                                    let newembed = new Discord.RichEmbed()
+                                        .setAuthor(`🎵 ${radio} 🎵`)
+                                        .setColor('FF0000')
+                                        .setDescription(`
+                                    \`🎵\` **Song name :**  \`${trackName}\`
+                                    \`🎤\` **Author(s) :**  \`${trackAuthor}\`
+                                    `);
+                                    return message.channel.send(newembed);
+                                }
+                            });
+                        }
+
                         let embed = new Discord.RichEmbed()
                             .setAuthor(`🎵 Now playing : ${radio} 🎵`)
                             .setColor('FF0000')
@@ -127,6 +151,7 @@ module.exports.run = async (bot, message, args, prefix) => {
                 \`🎵\` **Song name :**  \`${trackName}\`
                 \`🎤\` **Author(s) :**  \`${trackAuthor}\`
                 `);
+                        setInterval(streamInfo, 1000);
                         return message.channel.send(embed);
                     });
 
