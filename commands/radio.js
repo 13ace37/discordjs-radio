@@ -92,7 +92,9 @@ module.exports.run = async (bot, message, args, prefix) => {
     if (args[0].toLowerCase() == "stop") {
 
         try {
-            clearInterval(streamInfo);
+            try {
+                clearInterval(streamInfo);
+            } catch(e){}
             return message.guild.voiceConnection.channel.leave();
         } catch (err) {
             if (message.guild.voiceConnection == null) {
