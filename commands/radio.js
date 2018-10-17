@@ -108,6 +108,10 @@ module.exports.run = async (bot, message, args, prefix) => {
         if (message.guild.voiceConnection != 'null') {
             //console.log(message.guild.voiceConnection)
             message.member.voiceChannel.leave();
+            try {
+                clearInterval(streamInfo);
+            } catch (e){}
+            
         }
         if (message.member.voiceChannel) {
             message.member.voiceChannel.join()
