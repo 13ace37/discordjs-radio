@@ -96,7 +96,7 @@ module.exports.run = async (bot, message, args, prefix) => {
         try {
             try {
                 clearInterval(streamInfo);
-            } catch(e){}
+            } catch (e) {}
             return message.guild.voiceConnection.channel.leave();
         } catch (err) {
             if (message.guild.voiceConnection == null) {
@@ -118,7 +118,7 @@ module.exports.run = async (bot, message, args, prefix) => {
             });
             return message.channel.send('Announcements on!');
         }
-        if (config[message.guild.id].on == 'true'){
+        if (config[message.guild.id].on == 'true') {
             config[message.guild.id] = {
                 on: "false"
             };
@@ -127,7 +127,7 @@ module.exports.run = async (bot, message, args, prefix) => {
             });
             return message.channel.send('Announcements off!');
         }
-        if (config[message.guild.id].on == 'false'){
+        if (config[message.guild.id].on == 'false') {
             config[message.guild.id] = {
                 on: "true"
             };
@@ -151,8 +151,8 @@ module.exports.run = async (bot, message, args, prefix) => {
             playingurl = url;
             try {
                 clearInterval(streamInfo);
-            } catch (e){}
-            
+            } catch (e) {}
+
         }
         if (message.member.voiceChannel) {
             message.member.voiceChannel.join()
@@ -162,8 +162,13 @@ module.exports.run = async (bot, message, args, prefix) => {
                         let radio = station.headers["icy-name"];
                         if (!radio.startsWith('I')) radio = 'I Love Radio - Charts & Hits by iloveradio.de';
                         let title = station.title;
-                        let track = title.split("-", 2);
-                        let trackName = track[1];
+                        let track = title.split("-");
+                        trackName = track[1];
+                        if (track.length > 2) {
+                            for (var i = 2; i < track.length; i++) {
+                                trackName = trackName + '-' + track[i];
+                            }
+                        }
                         let trackAuthor = track[0];
 
                         function streamInfo() {
@@ -174,13 +179,23 @@ module.exports.run = async (bot, message, args, prefix) => {
                             internetradio.getStationInfo(url, function (error, station) {
                                 if (error) return;
                                 let newtitle = station.title;
-                                let newtrack = title.split("-", 2);
-                                let newtrackName = track[1];
+                                newtrack = title.split("-");
+                                newtrackName = track[1];
+                                if (newtrack.length > 2) {
+                                    for (var i = 2; i < newtrack.length; i++) {
+                                        newtrackName = newtrackName + '-' + newtrack[i];
+                                    }
+                                }
                                 let newtrackAuthor = track[0];
                                 while (newtitle != title) {
                                     title = station.title;
                                     track = title.split("-");
                                     trackName = track[1];
+                                    if (track.length > 2) {
+                                        for (var i = 2; i < track.length; i++) {
+                                            trackName = trackName + '-' + track[i];
+                                        }
+                                    }
                                     trackAuthor = track[0];
                                     let newembed = new Discord.RichEmbed()
                                         .setAuthor(`🎵 Song Changed : ${radio} 🎵`)
