@@ -162,7 +162,7 @@ module.exports.run = async (bot, message, args, prefix) => {
                         let radio = station.headers["icy-name"];
                         if (!radio.startsWith('I')) radio = 'I Love Radio - Charts & Hits by iloveradio.de';
                         let title = station.title;
-                        let track = title.split("-");
+                        let track = title.split("-", 1);
                         let trackName = track[1];
                         let trackAuthor = track[0];
 
