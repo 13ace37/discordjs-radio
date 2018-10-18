@@ -1,5 +1,7 @@
 const Discord = require("discord.js");
 const internetradio = require('node-internet-radio');
+const fs = require("fs");
+var config = JSON.parse(fs.readFileSync("./config/settings.json", "utf8"));
 
 var playingurl;
 var currentstream;
@@ -100,18 +102,49 @@ module.exports.run = async (bot, message, args, prefix) => {
             if (message.guild.voiceConnection == null) {
                 return message.channel.send('How should it be possible to leave a channel where I\'m not in?');
             } else {
+                console.log(err);
                 return message.channel.send('Something went wrong!');
             }
         }
 
     }
+    if (args[0].toLowerCase() == 'info') {
+        if (!config[message.guild.id]) {
+            config[message.guild.id] = {
+                on: "true"
+            };
+            fs.writeFile("./config/settings.json", JSON.stringify(config), (err) => {
+                if (err) console.log(err);
+            });
+            return message.channel.send('Announcements on!');
+        }
+        if (config[message.guild.id].on == 'true'){
+            config[message.guild.id] = {
+                on: "false"
+            };
+            fs.writeFile("./config/settings.json", JSON.stringify(config), (err) => {
+                if (err) console.log(err);
+            });
+            return message.channel.send('Announcements off!');
+        }
+        if (config[message.guild.id].on == 'false'){
+            config[message.guild.id] = {
+                on: "true"
+            };
+            fs.writeFile("./config/settings.json", JSON.stringify(config), (err) => {
+                if (err) console.log(err);
+            });
+            return message.channel.send('Announcements on!');
+        }
+    }
+
     return message.channel.send('Usage : `.radio play {radio number / help}/stop/info`');
 
 
     function startStream(url, message) {
-        if (!url) return;
-        if (url === currentstream) return;
-        if (!message) return;
+        if (!url) return message.channel.send('Error : No stream url defined!');
+        if (url === currentstream) return message.channel.send('Error : Stream is already running!');
+        if (!message) return message.channel.send('Error : No message defined!');
         currentstream = url;
         if (message.guild.voiceConnection != 'null') {
             message.member.voiceChannel.leave();
@@ -134,6 +167,9 @@ module.exports.run = async (bot, message, args, prefix) => {
                         let trackAuthor = track[0];
 
                         function streamInfo() {
+                            config = JSON.parse(fs.readFileSync("./config/settings.json", "utf8"));
+                            if (!config[message.guild.id]) return;
+                            if (config[message.guild.id].on == 'false') return;
                             if (url != playingurl) return;
                             internetradio.getStationInfo(url, function (error, station) {
                                 if (error) return;
