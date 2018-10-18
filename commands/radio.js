@@ -5,6 +5,8 @@ var config = JSON.parse(fs.readFileSync("./config/settings.json", "utf8"));
 
 var playingurl;
 var currentstream;
+var trackName;
+var newtrackName;
 
 require('events').EventEmitter.prototype._maxListeners = 100;
 
