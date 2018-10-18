@@ -1,8 +1,9 @@
-# discordjs-radio
+<h1><a href='https://github.com/13ace37/discordjs-radio' style='text-decoration: none'>discordjs-radio</a></h1>
+
+
 #### by Ace *inspired by* [julianYaman](https://github.com/julianYaman/iloveradio-discord-bot)
 
-## Version 
-`1.3` Alpha
+<img src='https://img.shields.io/badge/version-A1.3-red.svg' />
 
 ## Commands
 
