@@ -174,7 +174,7 @@ module.exports.run = async (bot, message, args, prefix) => {
                             internetradio.getStationInfo(url, function (error, station) {
                                 if (error) return;
                                 let newtitle = station.title;
-                                let newtrack = title.split("-");
+                                let newtrack = title.split("-", 2);
                                 let newtrackName = track[1];
                                 let newtrackAuthor = track[0];
                                 while (newtitle != title) {
